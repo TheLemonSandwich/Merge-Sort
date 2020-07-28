@@ -1,0 +1,94 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Sorting
+{
+
+public:
+	void MergeSort(int, int);
+	void Merge(int, int,int);
+	bool Append();
+	void SizeIncrease();
+	void Display() const;
+	int counter;
+	Sorting() :size(10), counter(0) {K = temp2 = new int[size];}
+
+private:
+	int * K,*temp2;
+	int size,mid;
+};
+bool Sorting::Append()
+{
+	cout << ">>\t";
+	cin >> *(K + counter);
+	if (*(K + counter) == -1)
+	{
+		*(K + counter) = NULL;
+		return false;
+	}
+	else
+	{
+		counter++;
+		SizeIncrease();
+		return true;
+	}
+}
+void Sorting::SizeIncrease()
+{
+	if (counter == size)
+	{
+		int* temp = new int[size*2];
+		for (int i = 0; i < size; i++)
+			*(temp + i) = *(K + i);
+		K = temp;
+		size *= 2;
+		cout << "Size Increased\n" << endl;
+	}
+}
+void Sorting::MergeSort(int left, int right)
+{
+	if (left < right)
+	{
+		mid = (left + right)/ 2;
+			MergeSort(left, mid);
+			MergeSort(mid + 1, right);
+			Merge(left, mid + 1, right);
+	}
+}
+void Sorting::Merge(int l, int m, int r)
+{
+	int* temp = new int[r];
+	int i = 0;
+	for (; i < r; i++)
+	{
+		if (K[l + i] == NULL)
+			break;
+		temp[i] = K[l + i];
+	}
+	int left_start = l;
+	int right_start = m + 1;
+	int j = left_start;
+	while (left_start <= m && right_start <= i)
+		if (temp[left_start] <= K[j])
+			temp2[j++] = temp[left_start++];
+		else
+			temp2[j++] = temp[right_start++];
+	while (left_start <= m)
+		temp2[j++] = temp[left_start++];
+	while (right_start <= i)
+		temp2[j++] = temp[right_start++];
+}
+void Sorting::Display() const
+{
+	for (int i = 0; i < counter; i++)
+		cout << *(temp2+i) << " ";
+}
+int main()
+{
+	Sorting s;
+	while (s.Append());
+	s.MergeSort(0, s.counter-1);
+	s.Display();
+}
